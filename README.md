@@ -41,7 +41,7 @@ go get github.com/finalist736/dbrmodels
 var persons dbmodels.Persons
 err := dbrSess.Select("*").From("persons").Where("PersonID = ?", 13).LoadStruct(&persons)
 ```
-# using
+# Projects
 
 Project including next data:
 * Name
@@ -52,7 +52,8 @@ Project including next data:
 * DB Name
 * Path where to .go files located
 
-* start generate project
+# Using
+start generate project
 ```bash
 dbrmodels project_name
 ```
