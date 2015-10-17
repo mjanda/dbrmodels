@@ -1,5 +1,5 @@
 # dbrmodels
-Create projects for MySql database and generate data model structs for github.com/gocraft/dbr
+Create projects for MySql database and generate table model structs for github.com/gocraft/dbr
 ## Getting started
 Lets create MySql table
 ```sql
@@ -24,12 +24,12 @@ type Persons struct {
 }
 ```
 ## MySql types
-|MySql|GO|NULL|
-|-|-|-|
-|tinyint(1)|bool|dbr.NullBool|
-|int|int64|dbr.NullInt64|
-|float|float64|dbr.NullFloat64|
-|*|string|dbr.NullString|
+| MySql | GO | NULL |
+|  -------------  | ------------- | ------------- |
+| tinyint(1) | bool | dbr.NullBool |
+| int | int64 | dbr.NullInt64 |
+| float | float64 | dbr.NullFloat64 |
+| * | string | dbr.NullString |
 
 # install
 ```bash
