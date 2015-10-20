@@ -95,7 +95,7 @@ type {{.Table}} struct {
 			if verbose {
 				fmt.Printf("\t\t\t => %s %s %s\n", name, typ, tag)
 			}
-			f := Field{name, typ, tag}
+			f := Field{strings.Title(name), typ, tag}
 			d.Fields = append(d.Fields, f)
 		}
 	}

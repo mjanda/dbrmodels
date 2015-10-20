@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"database/sql"
 	"fmt"
 )
@@ -8,6 +9,11 @@ import (
 func DoWork(name string, verbose bool) {
 	
 	p := GetProject(name)
+	if p == nil {
+		fmt.Fprintf(os.Stderr, "no that project - %s\n", name)
+		fmt.Fprintf(os.Stderr, "type `dbrmodels create %s` to create one\n", name)
+		return
+	}
 
 	db, err := sql.Open("mysql", 
 		fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", p.DBUser, p.DBPass, p.DBHost, p.DBPort, p.DBName))

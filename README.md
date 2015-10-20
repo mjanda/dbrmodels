@@ -15,6 +15,9 @@ CREATE TABLE Persons
 and generate gocraft/dbr model
 ```go
 package dbmodels
+
+import "github.com/gocraft/dbr"
+
 type Persons struct {
     PersonID    int64           `db:"PersonID"`
     LastName    string          `db:"LastName"`
@@ -25,7 +28,7 @@ type Persons struct {
 ```
 ## MySql types
 | MySql | GO | NULL |
-|  -------------  | ------------- | ------------- |
+| ------------- | ------------- | ------------- |
 | tinyint(1) | bool | dbr.NullBool |
 | int | int64 | dbr.NullInt64 |
 | float | float64 | dbr.NullFloat64 |
@@ -72,4 +75,8 @@ dbrmodels edit project_name
 * remove project
 ```bash
 dbrmodels remove project_name
+```
+* view projects data
+```bash
+dbrmodels view project_name
 ```

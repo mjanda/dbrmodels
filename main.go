@@ -14,6 +14,7 @@ func printUsage() {
 	fmt.Println("create project - dbrmodels create")
 	fmt.Println("edit project   - dbrmodels edit $project_name")
 	fmt.Println("remove project - dbrmodels remove $project_name")
+	fmt.Println("view project   - dbrmodels view $project_name")
 }
 
 func main() {
@@ -43,6 +44,8 @@ func main() {
 			DoEdit(name, verbose)
 		} else if cmd == "remove" {
 			DoRemove(name, verbose)
+		} else if cmd == "view" {
+			DoView(name)
 		} else {
 			printUsage()
 		}
