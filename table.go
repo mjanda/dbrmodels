@@ -16,9 +16,11 @@ type Field struct {
 }
 
 type TplData struct {
-	Table   string
-	Fields  []Field
-	DbrUsed string
+	PkgName     string
+	Table       string
+	Fields      []Field
+	FieldsNames string
+	DbrUsed     string
 }
 
 func CreateTableModel(path string, table string, db *sql.DB, verbose bool) {
@@ -31,18 +33,44 @@ func CreateTableModel(path string, table string, db *sql.DB, verbose bool) {
 		extra string
 	)
 
-	const data = `package dbmodels
+	const data = `package {{.PkgName}}
 
 import {{.DbrUsed}}"github.com/gocraft/dbr"
+
+var fieldsNames = []string{ {{.FieldsNames}} }
 
 type {{.Table}} struct {
 	{{range .Fields}}{{.Name}}{{/*tab*/}} {{.Type}}{{/*tab*/}} {{.Tag}}
 	{{end}}
 }
 
+func New() *{{.Table}} {
+	return new({{.Table}})
+}
+
+func NewSlice() []*{{.Table}} {
+	return make([]*{{.Table}}, 0)
+}
+
+func FieldsNames() []string {
+	return fieldsNames
+}
+
+func FieldsNamesWithOutID() []string {
+	slice := make([]string, 0)
+	for _, iterator := range fieldsNames {
+		if iterator == "ID" {
+			continue
+		}
+		slice = append(slice, iterator)
+	}
+	return slice
+}
+
 `
 
 	d := TplData{}
+	d.PkgName = table
 	d.Table = strings.Title(table)
 	d.DbrUsed = "_"
 
@@ -97,19 +125,27 @@ type {{.Table}} struct {
 			}
 			f := Field{strings.Title(name), typ, tag}
 			d.Fields = append(d.Fields, f)
+			d.FieldsNames = fmt.Sprintf("%s, \"%s\"", d.FieldsNames, f.Name)
 		}
+		d.FieldsNames = strings.Trim(d.FieldsNames, ",")
 	}
 	if dbrUsed > 0 {
 		d.DbrUsed = ""
 	}
 	t := template.Must(template.New("struct").Parse(data))
-	file, err := os.Create(path + "/" + table + ".go")
+	fullPath := path + "/" + table
+	fullFileName := fullPath + "/model.go"
+	err := os.MkdirAll(fullPath, 0700)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+	file, err := os.Create(fullFileName)
 	defer file.Close()
 	if err == nil {
 		if err := t.Execute(file, d); err != nil {
 			fmt.Errorf("%s", err.Error())
 		}
-		cmd := exec.Command("go", "fmt", path+"/"+table+".go")
+		cmd := exec.Command("go", "fmt", fullFileName)
 		err = cmd.Start()
 		if err == nil {
 			err = cmd.Wait()
