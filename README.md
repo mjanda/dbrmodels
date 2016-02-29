@@ -45,7 +45,7 @@ func FieldsNames() []string {
 	return fieldsNames
 }
 
-// return fields names with out auto_increment field
+// return fields names without auto_increment field for insert
 func FieldsNamesWithOutAI() []string {
 	var slice []string
 	for _, iterator := range fieldsNames {
@@ -66,7 +66,7 @@ func FieldsNamesWithOutAI() []string {
 | date, datetime, timestamp | dbr.NullTime | dbr.NullTime |
 | * | string | dbr.NullString |
 
-# install
+# Install
 ```bash
 go get github.com/finalist736/dbrmodels
 ```
@@ -103,7 +103,7 @@ dbrmodels works with projects(databases) including next data:
         "DBUser": "root",
         "DBPass": "",
         "DBName": "test",
-        "Path": "/home/dbrfan/go/src/github.com/dbrfan/dbrmodels"
+        "Path": "/home/finalist/go/src/github.com/finalist736/persons_dates_project/dbrmodels"
 }
 ```
 
@@ -114,13 +114,14 @@ SHOW TABLES;
 - Persons
 - TestDatesTable
 ```
+converts into files:
 ```
-- /home/dbrfan/go/src/github.com/dbrfan
----- dbrmodels
---------- Persons
--------------- models.go
---------- TestDatesTable
--------------- models.go
+- /home/finalist/go/src/github.com/finalist736/persons_dates_project/
+---- dbrmodels/
+--------- Persons/
+-------------- model.go
+--------- TestDatesTable/
+-------------- model.go
 ```
 
 # Using
