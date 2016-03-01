@@ -108,7 +108,10 @@ func CreateTableModel(path, table string, db *sql.DB, verbose bool) {
 				} else {
 					typ = "int64"
 				}
-			} else if strings.Contains(typ, "float") {
+			} else if strings.Contains(typ, "float") ||
+				strings.Contains(typ, "decimal") ||
+				strings.Contains(typ, "double") ||
+				strings.Contains(typ, "real") {
 				if null == "YES" {
 					template_data.DbrUsed = true
 					typ = "dbr.NullFloat64"
