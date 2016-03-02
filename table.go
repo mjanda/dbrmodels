@@ -146,14 +146,16 @@ func CreateTableModel(path, table string, db *sql.DB, verbose bool) {
 	fullFileName := fullPath + "/model.go"
 	err := os.MkdirAll(fullPath, 0700)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintf(os.Stderr, "file creating error: %s", err)
+		return
 	}
 
 	file, err := os.Create(fullFileName)
 	defer file.Close()
 	if err == nil {
 		if err := t.Execute(file, template_data); err != nil {
-			fmt.Errorf("%s", err.Error())
+			fmt.Fprintf(os.Stderr, "template executing: %s", err)
+			return
 		}
 		cmd := exec.Command("go", "fmt", fullFileName)
 		err = cmd.Start()
