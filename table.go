@@ -95,6 +95,14 @@ func CreateTableModel(path, table string, db *sql.DB, verbose bool) {
 				template_data.AutoInc = titled_name
 			}
 
+			if strings.Contains(typ, "enum") {
+				if null == "YES" {
+					template_data.DbrUsed = true
+					typ = "dbr.NullString"
+				} else {
+					typ = "string"
+				}
+			}
 			if typ == "tinyint(1)" { // bool need be first because next `strings.Contains(typ, "int")`
 				if null == "YES" {
 					template_data.DbrUsed = true
