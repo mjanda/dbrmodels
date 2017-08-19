@@ -5,8 +5,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"text/template"
+
+	"github.com/serenize/snaker"
 )
 
 const data = `package {{.PkgName}}
@@ -60,6 +63,16 @@ type TplData struct {
 	DbrUsed     bool
 }
 
+func formatName(name string) string {
+	var startsWithNumber = regexp.MustCompile(`^[0-9]`)
+	var prefix = ""
+
+	if startsWithNumber.MatchString(name) {
+		prefix = "Field"
+	}
+	return fmt.Sprintf("%s%s", prefix, strings.Title(snaker.SnakeToCamel(name)))
+}
+
 func CreateTableModel(path, table string, db *sql.DB, verbose bool) {
 	var (
 		name  string
@@ -72,7 +85,7 @@ func CreateTableModel(path, table string, db *sql.DB, verbose bool) {
 
 	template_data := TplData{}
 	template_data.PkgName = table
-	template_data.Table = strings.Title(table)
+	template_data.Table = formatName(table)
 
 	// get table columns info
 	q := fmt.Sprintf("SHOW COLUMNS FROM %s", table)
@@ -90,7 +103,8 @@ func CreateTableModel(path, table string, db *sql.DB, verbose bool) {
 			if verbose {
 				fmt.Printf("\t\tname: `%s` type: %s null: %s key: %s def: %s extra: %s\n", name, typ, null, key, def.String, extra)
 			}
-			titled_name := strings.Title(name)
+			titled_name := formatName(name)
+			fmt.Sprintf(titled_name)
 			if extra == "auto_increment" {
 				template_data.AutoInc = titled_name
 			}
